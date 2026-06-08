@@ -1,0 +1,41 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # O la rama que uses por defecto (master, etc.)
+
+# Necesario para que la acción pueda escribir y desplegar en GitHub Pages
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configurar el entorno de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Cambia a la versión de Node que necesites
+          cache: 'npm'     # Cachea las dependencias para que vaya más rápido
+
+      # 3. Instalar dependencias
+      - name: Install dependencies
+        run: npm ci        # 'npm ci' es más limpio y rápido en entornos de CI que 'npm install'
+
+      # 4. Compilar el proyecto (genera la carpeta dist)
+      - name: Build project
+        run: npm run build
+
+      # 5. Publicar el directorio dist en la rama gh-pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist     # La carpeta que quieres subir
+          branch: gh-pages # Rama destino donde se guardará el build
