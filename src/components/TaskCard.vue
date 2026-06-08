@@ -29,6 +29,9 @@ const colorPrioridad: Record<string, string> = {
         </v-chip>
       </div>
     </v-card-text>
+    <v-card-text v-if="props.tarea.horasEstimadas" class="py-0 text-caption text-medium-emphasis">
+      <v-icon icon="mdi-clock-outline" size="14" class="mr-1" />{{ props.tarea.horasEstimadas }}h estimadas
+    </v-card-text>
     <v-card-actions class="pt-0">
       <v-btn
         v-if="props.tarea.estado !== 'Completado'"

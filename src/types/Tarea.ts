@@ -6,4 +6,5 @@ export interface Tarea {
   titulo: string
   prioridad: Prioridad
   estado: Estado
+  horasEstimadas: number | null
 }

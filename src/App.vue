@@ -1,52 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { Tarea, Estado } from './types/Tarea'
+import { ref } from 'vue'
 import KanbanColumn from './components/KanbanColumn.vue'
 import TaskFormDialog from './components/TaskFormDialog.vue'
+import { useTareasStore } from './stores/tareas'
 
-const STORAGE_KEY = 'kanban-tareas'
-
-function cargarTareas(): Tarea[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as Tarea[]
-  } catch {
-    return []
-  }
-}
-
-const tareas = ref<Tarea[]>(cargarTareas())
-
-watch(
-  tareas,
-  (valor) => localStorage.setItem(STORAGE_KEY, JSON.stringify(valor)),
-  { deep: true }
-)
-
-const pendientes = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'Pendiente'))
-const enProgreso = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'En Progreso'))
-const completadas = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'Completado'))
-
+const store = useTareasStore()
 const dialogAbierto = ref<boolean>(false)
-
-const siguienteEstado: Partial<Record<Estado, Estado>> = {
-  Pendiente: 'En Progreso',
-  'En Progreso': 'Completado'
-}
-
-function agregarTarea(tarea: Tarea): void {
-  tareas.value.push(tarea)
-}
-
-function avanzarTarea(id: string): void {
-  const tarea = tareas.value.find(t => t.id === id)
-  if (!tarea) return
-  const siguiente = siguienteEstado[tarea.estado]
-  if (siguiente) tarea.estado = siguiente
-}
-
-function eliminarTarea(id: string): void {
-  tareas.value = tareas.value.filter(t => t.id !== id)
-}
 </script>
 
 <template>
@@ -75,27 +34,27 @@ function eliminarTarea(id: string): void {
             <kanban-column
               titulo="Pendiente"
               color="blue-grey-darken-1"
-              :tareas="pendientes"
-              @avanzar="avanzarTarea"
-              @eliminar="eliminarTarea"
+              :tareas="store.pendientes"
+              @avanzar="store.avanzarTarea"
+              @eliminar="store.eliminarTarea"
             />
           </v-col>
           <v-col cols="12" md="4">
             <kanban-column
               titulo="En Progreso"
               color="orange-darken-2"
-              :tareas="enProgreso"
-              @avanzar="avanzarTarea"
-              @eliminar="eliminarTarea"
+              :tareas="store.enProgreso"
+              @avanzar="store.avanzarTarea"
+              @eliminar="store.eliminarTarea"
             />
           </v-col>
           <v-col cols="12" md="4">
             <kanban-column
               titulo="Completado"
               color="green-darken-2"
-              :tareas="completadas"
-              @avanzar="avanzarTarea"
-              @eliminar="eliminarTarea"
+              :tareas="store.completadas"
+              @avanzar="store.avanzarTarea"
+              @eliminar="store.eliminarTarea"
             />
           </v-col>
         </v-row>
@@ -105,7 +64,7 @@ function eliminarTarea(id: string): void {
     <v-dialog v-model="dialogAbierto" max-width="480" persistent>
       <task-form-dialog
         v-if="dialogAbierto"
-        @guardar="agregarTarea"
+        @guardar="store.agregarTarea"
         @cerrar="dialogAbierto = false"
       />
     </v-dialog>

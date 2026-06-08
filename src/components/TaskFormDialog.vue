@@ -9,6 +9,7 @@ const emit = defineEmits<{
 
 const titulo = ref<string>('')
 const prioridad = ref<Prioridad>('Media')
+const horasEstimadas = ref<number | null>(null)
 const prioridades: Prioridad[] = ['Alta', 'Media', 'Baja']
 
 function guardar(): void {
@@ -17,7 +18,8 @@ function guardar(): void {
     id: crypto.randomUUID(),
     titulo: titulo.value.trim(),
     prioridad: prioridad.value,
-    estado: 'Pendiente'
+    estado: 'Pendiente',
+    horasEstimadas: horasEstimadas.value
   }
   emit('guardar', tarea)
   emit('cerrar')
@@ -41,6 +43,15 @@ function guardar(): void {
         v-model="prioridad"
         :items="prioridades"
         label="Prioridad"
+        variant="outlined"
+        class="mb-2"
+      />
+      <v-text-field
+        v-model.number="horasEstimadas"
+        label="Horas estimadas (opcional)"
+        type="number"
+        min="0"
+        step="0.5"
         variant="outlined"
       />
     </v-card-text>
