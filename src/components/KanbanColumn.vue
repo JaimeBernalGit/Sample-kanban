@@ -11,6 +11,7 @@ defineProps<{
 const emit = defineEmits<{
   avanzar: [id: string]
   eliminar: [id: string]
+  cancelar: [id: string]
 }>()
 </script>
 
@@ -27,6 +28,7 @@ const emit = defineEmits<{
         :tarea="tarea"
         @avanzar="emit('avanzar', $event)"
         @eliminar="emit('eliminar', $event)"
+        @cancelar="emit('cancelar', $event)"
       />
       <div v-if="tareas.length === 0" class="text-center text-medium-emphasis py-8">
         <v-icon icon="mdi-inbox-outline" size="40" class="mb-2 d-block mx-auto" />

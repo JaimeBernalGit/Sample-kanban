@@ -37,6 +37,7 @@ const dialogAbierto = ref<boolean>(false)
               :tareas="store.pendientes"
               @avanzar="store.avanzarTarea"
               @eliminar="store.eliminarTarea"
+              @cancelar="store.cancelarTarea"
             />
           </v-col>
           <v-col cols="12" md="4">
@@ -46,6 +47,7 @@ const dialogAbierto = ref<boolean>(false)
               :tareas="store.enProgreso"
               @avanzar="store.avanzarTarea"
               @eliminar="store.eliminarTarea"
+              @cancelar="store.cancelarTarea"
             />
           </v-col>
           <v-col cols="12" md="4">
@@ -55,6 +57,17 @@ const dialogAbierto = ref<boolean>(false)
               :tareas="store.completadas"
               @avanzar="store.avanzarTarea"
               @eliminar="store.eliminarTarea"
+              @cancelar="store.cancelarTarea"
+            />
+          </v-col>
+          <v-col cols="12" md="4">
+            <kanban-column
+              titulo="Cancelado"
+              color="red-darken-2"
+              :tareas="store.canceladas"
+              @avanzar="store.avanzarTarea"
+              @eliminar="store.eliminarTarea"
+              @cancelar="store.cancelarTarea"
             />
           </v-col>
         </v-row>

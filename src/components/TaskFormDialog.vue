@@ -10,6 +10,7 @@ const emit = defineEmits<{
 const titulo = ref<string>('')
 const prioridad = ref<Prioridad>('Media')
 const horasEstimadas = ref<number | null>(null)
+const descripcion = ref<string>('')
 const prioridades: Prioridad[] = ['Alta', 'Media', 'Baja']
 
 function guardar(): void {
@@ -19,6 +20,7 @@ function guardar(): void {
     titulo: titulo.value.trim(),
     prioridad: prioridad.value,
     estado: 'Pendiente',
+    descripcion: descripcion.value,
     horasEstimadas: horasEstimadas.value
   }
   emit('guardar', tarea)
@@ -43,6 +45,12 @@ function guardar(): void {
         v-model="prioridad"
         :items="prioridades"
         label="Prioridad"
+        variant="outlined"
+        class="mb-2"
+      />
+      <v-textarea
+        v-model="descripcion"
+        label="Descripción de la tarea"
         variant="outlined"
         class="mb-2"
       />

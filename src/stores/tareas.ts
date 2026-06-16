@@ -29,6 +29,7 @@ export const useTareasStore = defineStore('tareas', () => {
   const pendientes = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'Pendiente'))
   const enProgreso = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'En Progreso'))
   const completadas = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'Completado'))
+  const canceladas = computed<Tarea[]>(() => tareas.value.filter(t => t.estado === 'Cancelado'))
 
   function agregarTarea(tarea: Tarea): void {
     tareas.value.push(tarea)
@@ -41,9 +42,15 @@ export const useTareasStore = defineStore('tareas', () => {
     if (siguiente) tarea.estado = siguiente
   }
 
+  function cancelarTarea(id: string): void {
+    const tarea = tareas.value.find(t => t.id === id)
+    if (!tarea) return
+    tarea.estado = 'Cancelado';
+  }
+
   function eliminarTarea(id: string): void {
     tareas.value = tareas.value.filter(t => t.id !== id)
   }
 
-  return { tareas, pendientes, enProgreso, completadas, agregarTarea, avanzarTarea, eliminarTarea }
+  return { tareas, pendientes, enProgreso, canceladas, completadas, agregarTarea, avanzarTarea, cancelarTarea, eliminarTarea }
 })

@@ -5,6 +5,7 @@ const props = defineProps<{ tarea: Tarea }>()
 const emit = defineEmits<{
   avanzar: [id: string]
   eliminar: [id: string]
+  cancelar: [id: string]
 }>()
 
 const colorPrioridad: Record<string, string> = {
@@ -28,6 +29,9 @@ const colorPrioridad: Record<string, string> = {
           {{ props.tarea.prioridad }}
         </v-chip>
       </div>
+      <div v-if="props.tarea.descripcion" class="text-body-2 text-medium-emphasis mt-1">
+    {{ props.tarea.descripcion }}
+  </div>
     </v-card-text>
     <v-card-text v-if="props.tarea.horasEstimadas" class="py-0 text-caption text-medium-emphasis">
       <v-icon icon="mdi-clock-outline" size="14" class="mr-1" />{{ props.tarea.horasEstimadas }}h estimadas
@@ -41,6 +45,16 @@ const colorPrioridad: Record<string, string> = {
         color="primary"
         title="Mover a la siguiente columna"
         @click="emit('avanzar', props.tarea.id)"
+      />
+      <v-spacer />
+      <v-btn
+        v-if="props.tarea.estado !== 'Completado'"
+        icon="mdi-arrow-right-circle-outline"
+        size="small"
+        variant="text"
+        color="primary"
+        title="Cancelar"
+        @click="emit('cancelar', props.tarea.id)"
       />
       <v-spacer />
       <v-btn
